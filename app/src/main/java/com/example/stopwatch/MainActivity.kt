@@ -9,8 +9,9 @@ import android.widget.Chronometer
 class MainActivity : AppCompatActivity() {
 
     lateinit var start : Button
-    lateinit var stop: Button
+    lateinit var restart: Button
     lateinit var timer: Chronometer
+    var running = false
 
     //make a classwide static constant in Kotlin
     companion object {
@@ -20,6 +21,31 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d(TAG, "onCreate: ")
+
+        wireWidgets()
+
+        start.setOnClickListener {
+            if(!running)
+            {
+                running = true
+                start.text = "Stop"
+                timer.start()
+            }
+            else
+            {
+                running = false
+                start.text = "Start"
+                timer.stop()
+            }
+        }
+
+    }
+
+    private fun wireWidgets() {
+        start = findViewById(R.id.button_main_start)
+        restart = findViewById(R.id.button_main_restart)
+        timer = findViewById(R.id.chronometer_main_stopwatch)
     }
 
     override fun onStart() {
