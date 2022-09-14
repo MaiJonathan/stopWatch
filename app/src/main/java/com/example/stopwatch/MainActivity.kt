@@ -2,6 +2,7 @@ package com.example.stopwatch
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.widget.Button
 import android.widget.Chronometer
@@ -12,7 +13,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var restart: Button
     lateinit var timer: Chronometer
     var running = false
-
+    var stopTime : Long = 0
+    var startTime: Long = 0
+    var timeStopped : Long = 0
     //make a classwide static constant in Kotlin
     companion object {
         // all your static constants go here
@@ -26,17 +29,32 @@ class MainActivity : AppCompatActivity() {
         wireWidgets()
 
         start.setOnClickListener {
-            if(!running)
+            if(!running) // when you run
             {
+                startTime = SystemClock.elapsedRealtime() //time you start again
+                timeStopped += (startTime-stopTime) //time stopped is total time elasped - (the difference in times from stop to start)
+                timer.base = timeStopped
                 running = true
                 start.text = "Stop"
                 timer.start()
             }
-            else
+            else //when you stop
             {
+                stopTime = SystemClock.elapsedRealtime() //time you stopped
                 running = false
                 start.text = "Start"
                 timer.stop()
+            }
+        }
+
+        restart.setOnClickListener {
+            if(running) {
+                timeStopped = SystemClock.elapsedRealtime()
+                startTime = SystemClock.elapsedRealtime()
+            }
+            if(!running)
+            {
+                stopTime = SystemClock.elapsedRealtime();
             }
         }
 
